@@ -1,9 +1,10 @@
-from lab3.person import Person
+from person import Person
 from list import PersonList
 
 
 if __name__ == '__main__':
-    data = PersonList('test.txt')
+    filename = input('filename=')
+    data = PersonList(filename) if filename else PersonList()
 
     data.add_person(
         Person().create('asd', 'hsdf', 'ff')

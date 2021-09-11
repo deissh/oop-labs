@@ -7,17 +7,17 @@ from interfaces import Readable, Writable
 
 class PersonList(Readable, Writable):
     _data: List[Person]
-    filename: str
+    _filename: str
 
     def __init__(self, filename='temp.dat'):
         self._data = []
-        self.filename = filename
+        self._filename = filename
 
-        with open(self.filename) as f:
+        with open(self._filename) as f:
             self.read(f)
 
     def __del__(self):
-        with open(self.filename, 'w') as f:
+        with open(self._filename, 'w') as f:
             self.write(f)
 
     @property

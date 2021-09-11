@@ -5,9 +5,9 @@ from interfaces import Writable, Readable
 
 
 class Person(Writable, Readable):
-    first_name: str
-    second_name: str
-    last_name: str
+    _first_name: str
+    _second_name: str
+    _last_name: str
 
     @singledispatchmethod
     def create(self, file: IO):
@@ -16,14 +16,26 @@ class Person(Writable, Readable):
 
     @create.register
     def _create(self, first_name: str, second_name: str, last_name: str):
-        self.first_name = first_name
-        self.second_name = second_name
-        self.last_name = last_name
+        self._first_name = first_name
+        self._second_name = second_name
+        self._last_name = last_name
         return self
 
     @property
+    def first_name(self):
+        return self._first_name
+
+    @property
+    def second_name(self):
+        return self.second_name
+
+    @property
+    def last_name(self):
+        return self.last_name
+
+    @property
     def fio(self):
-        return f'{self.first_name} {self.second_name} {self.last_name}'
+        return f'{self._first_name} {self._second_name} {self._last_name}'
 
     def write(self, file):
         file.write(self.fio + '\n')
@@ -32,8 +44,8 @@ class Person(Writable, Readable):
         raw = file.readline().split(' ')
 
         try:
-            self.first_name = raw[0]
-            self.second_name = raw[1]
-            self.last_name = raw[1]
+            self._first_name = raw[0]
+            self._second_name = raw[1]
+            self._last_name = raw[2]
         except Exception:
             raise ValueError("invalid person format")
