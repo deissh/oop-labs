@@ -1,4 +1,4 @@
-from functools import singledispatchmethod
+import os
 from typing import List, Optional
 
 from person import Person
@@ -7,11 +7,18 @@ from interfaces import Readable, Writable
 
 class PersonList(Readable, Writable):
     _data: List[Person]
+    filename: str
 
-    def __init__(self, filename='test.txt'):
+    def __init__(self, filename='temp.dat'):
         self._data = []
-        with open(filename) as f:
+        self.filename = filename
+
+        with open(self.filename) as f:
             self.read(f)
+
+    def __del__(self):
+        with open(self.filename, 'w') as f:
+            self.write(f)
 
     @property
     def len(self):
@@ -39,7 +46,9 @@ class PersonList(Readable, Writable):
         return p.fio if p is not None else None
 
     def read(self, file):
-        self._data.append(Person().create(file))
+        while not file.tell() == os.fstat(file.fileno()).st_size:
+            p = Person().create(file)
+            self._data.append(p)
 
     def write(self, file):
         for p in self._data:
