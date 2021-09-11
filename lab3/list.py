@@ -43,7 +43,7 @@ class PersonList(Readable, Writable):
     def get_person_str(self, idx: int) -> Optional[str]:
         p = self.get_person(idx)
 
-        return p.fio if p is not None else None
+        return p.to_string if p is not None else None
 
     def read(self, file):
         while not file.tell() == os.fstat(file.fileno()).st_size:

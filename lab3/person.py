@@ -34,11 +34,11 @@ class Person(Writable, Readable):
         return self.last_name
 
     @property
-    def fio(self):
+    def to_string(self):
         return f'{self._first_name} {self._second_name} {self._last_name}'
 
     def write(self, file):
-        file.write(self.fio + '\n')
+        file.write(self.to_string + '\n')
 
     def read(self, file):
         raw = file.readline().split(' ')
