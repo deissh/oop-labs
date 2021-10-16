@@ -1,4 +1,5 @@
 from functools import singledispatchmethod
+from typing import List
 
 from person import Person
 
@@ -10,8 +11,12 @@ class Student(Person):
     def __init__(self):
         super(Student, self).__init__()
 
-    # noinspection PyMethodOverriding
-    def create(self, first_name: str, second_name: str, last_name: str, group: str, course: int):
+    @singledispatchmethod
+    def create(self, raw: List[str]):
+        super(Student, self).create(raw)
+
+    @create.register
+    def _create(self, first_name: str, second_name: str, last_name: str, group: str, course: int):
         super(Student, self).create(first_name, second_name, last_name)
         self.group = group
         self.course = course
@@ -39,3 +44,11 @@ class Student(Person):
     @property
     def to_string(self):
         return super(Student, self).to_string + f' {self._group} {self._course}'
+
+    def read(self, raw: List[str]):
+        try:
+            super(Student, self).read(raw)
+            self.group = raw[3]
+            self.course = int(raw[4])
+        except Exception:
+            raise ValueError("invalid person format")

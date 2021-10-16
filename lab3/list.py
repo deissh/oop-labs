@@ -1,6 +1,8 @@
 import os
 from typing import List, Optional
 
+from lab3.employer import Employer
+from lab3.student import Student
 from person import Person
 from interfaces import Readable, Writable
 
@@ -47,8 +49,14 @@ class PersonList(Readable, Writable):
 
     def read(self, file):
         while not file.tell() == os.fstat(file.fileno()).st_size:
-            p = Person().create(file)
-            self._data.append(p)
+            raw = file.readline().split(' ')
+
+            if len(raw) == 3:
+                self._data.append(Person().create(raw))
+            elif len(raw) == 4:
+                self._data.append(Employer().create(raw))
+            elif len(raw) == 5:
+                self._data.append(Student().create(raw))
 
     def write(self, file):
         for p in self._data:

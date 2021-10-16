@@ -1,4 +1,4 @@
-from typing import IO
+from typing import IO, List
 
 from functools import singledispatchmethod
 from interfaces import Writable, Readable
@@ -10,8 +10,8 @@ class Person(Writable, Readable):
     _last_name: str
 
     @singledispatchmethod
-    def create(self, file: IO):
-        self.read(file)
+    def create(self, raw: List[str]):
+        self.read(raw)
         return self
 
     @create.register
@@ -40,9 +40,7 @@ class Person(Writable, Readable):
     def write(self, file):
         file.write(self.to_string + '\n')
 
-    def read(self, file):
-        raw = file.readline().split(' ')
-
+    def read(self, raw: List[str]):
         try:
             self._first_name = raw[0]
             self._second_name = raw[1]

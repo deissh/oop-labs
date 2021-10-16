@@ -10,7 +10,7 @@ if __name__ == '__main__':
     st = Student().create('asd', 'hsdf', 'ff', 'pr123', 2)
     data.add_person(st)
 
-    em = Employer().create('employer', 'name', 'andsdads')
+    em = Employer().create('employer', 'name', 'andsdads', 12345567)
     data.add_person(em)
 
     print(

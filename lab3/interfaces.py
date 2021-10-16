@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import IO
+from typing import IO, List
 
 
 class Writable(ABC):
@@ -10,5 +10,5 @@ class Writable(ABC):
 
 class Readable(ABC):
     @abstractmethod
-    def read(self, file: IO):
+    def read(self, raw: List[str]):
         raise NotImplementedError
