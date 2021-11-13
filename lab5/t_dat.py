@@ -4,7 +4,7 @@ FxType = Callable[[int], float]
 
 
 class TDat:
-    points: Dict[int, float]
+    _points: Dict[int, float]
     _x_min: Optional[int]
     _x_max: Optional[int]
 
@@ -12,6 +12,14 @@ class TDat:
         self.points = {}
         self._x_min = x_min
         self._x_max = x_max
+
+    @property
+    def points(self) -> Dict[int, float]:
+        return self._points
+
+    @points.setter
+    def points(self, value):
+        self._points = value
 
     @property
     def max(self) -> int:

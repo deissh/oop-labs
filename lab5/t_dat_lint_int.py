@@ -1,4 +1,4 @@
-from t_dat import TDat, FxType
+from t_dat_filtered import TDat, FxType
 
 
 class TDatLintInt(TDat):
