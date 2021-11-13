@@ -1,20 +1,39 @@
-from typing import Dict, Callable, Optional
+from typing import Dict, Callable, Optional, Set
 
 from t_dat import TDat, FxType
 
 
 class TDatFiltered(TDat):
-    def append(self, x: int, fx: FxType):
-        
-        keys = sorted(self.points.keys())
+    def __is_not_peek(self, v) -> bool:
+        x, y = v
+        keys = sorted(self._points.keys())
 
-        left = max(filter(lambda i: i < x, keys))
-        right = min(filter(lambda i: i > x, keys))
+        left = max(filter(lambda i: i < x, keys), default=0)
+        right = min(filter(lambda i: i > x, keys), default=0)
 
-        if fx(x) - fx(right) > (fx(self._x_max) - fx(self._x_min)) * len(keys) and fx(x) - fx(left) > (fx(self._x_max) - fx(self._x_min)) * len(keys):
-            return
+        f_x = self._points[x]
+        f_max = self._points[self.max]
+        f_min = self._points[self.max]
+        f_l = self._points.get(left, f_min)
+        f_r = self._points.get(right, f_max)
 
-        if fx(right) - fx(x) > (fx(self._x_max) - fx(self._x_min)) * len(keys) and fx(left) - fx(x) > (fx(self._x_max) - fx(self._x_min)) * len(keys):
-            return
+        k = 100
 
-        self.points[x] = fx(x)
+        if len(keys) > 2 and f_x - f_r > (f_max - f_min) * k and f_x - f_l > (f_max - f_min) * k:
+            return False
+        if len(keys) > 2 and f_r - f_x > (f_max - f_min) * k and f_l - f_x > (f_max - f_min) * k:
+            return False
+
+        return True
+
+    @property
+    def points(self):
+        return self._points
+        # return {
+        #     k: v
+        #     for k, v in filter(self.__is_not_peek, self._points.items())
+        # }
+
+    @points.setter
+    def points(self, value):
+        self._points = value

@@ -1,7 +1,7 @@
-from t_dat_filtered import TDat, FxType
+from t_dat_filtered import TDatFiltered, FxType
 
 
-class TDatLintInt(TDat):
+class TDatLintInt(TDatFiltered):
     def __init__(self):
         super().__init__()
 
@@ -20,7 +20,7 @@ class TDatLintInt(TDat):
 
         keys = sorted(self.points.keys())
 
-        _min = max(filter(lambda i: i < x, keys))
-        _max = min(filter(lambda i: i > x, keys))
+        _min = max(filter(lambda i: i < x, keys), default=0)
+        _max = min(filter(lambda i: i > x, keys), default=0)
 
         return self._interpolate(_min, _max)(x)

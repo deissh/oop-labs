@@ -1,11 +1,11 @@
 from typing import List, Tuple
 
 import bisect
-from t_dat_filtered import TDat
+from t_dat_filtered import TDatFiltered
 
 
-class TDatSplitInt(TDat):
-    def __init__(TDatFiltered):
+class TDatSplitInt(TDatFiltered):
+    def __init__(self):
         super().__init__()
 
     def __changes(self, x: List[float]) -> List[float]:
