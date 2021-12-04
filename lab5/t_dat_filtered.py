@@ -28,11 +28,11 @@ class TDatFiltered(TDat):
 
     @property
     def points(self):
-        return self._points
-        # return {
-        #     k: v
-        #     for k, v in filter(self.__is_not_peek, self._points.items())
-        # }
+        # return self._points
+        return {
+            k: v
+            for k, v in filter(self.__is_not_peek, self._points.items())
+        }
 
     @points.setter
     def points(self, value):
