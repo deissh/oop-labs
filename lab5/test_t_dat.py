@@ -1,6 +1,5 @@
 from typing import Optional, Set
 import pytest
-
 from t_dat import TDat
 
 
