@@ -11,7 +11,7 @@ private:
 
 public:
     Matrix() : mRows(0), mCols(0) {}
-    Matrix(uint8_t dimension) : mRows(dimension), mCols(dimension), data(dimension * dimension) {}
+    explicit Matrix(uint8_t dimension) : mRows(dimension), mCols(dimension), data(dimension * dimension) {}
     Matrix(uint8_t rows, uint8_t cols) : mRows(rows), mCols(cols), data(rows * cols) {}
 
     void validateIndexes(size_t row, size_t col) const {
@@ -21,20 +21,16 @@ public:
             throw std::overflow_error("Invalid column index");
     }
 
-    friend Matrix operator+(const Matrix &m, T value) {
-        Matrix result(m.mRows, m.mCols);
+    Matrix operator+(T value) {
+        Matrix result(this->mRows, this->mCols);
 
-        for (size_t i = 0; i < m.mRows; i++) {
-            for (size_t j = 0; j < m.mCols; j++) {
-                result(i, j) = m(i, j) + value;
+        for (size_t i = 0; i < this->mRows; i++) {
+            for (size_t j = 0; j < this->mCols; j++) {
+                result(i, j) = this(i, j) + value;
             }
         }
 
         return result;
-    }
-
-    Matrix operator+=(T value) {
-        return this + value;
     }
 
     Matrix operator+(const Matrix &b) {
@@ -64,38 +60,22 @@ public:
         return result;
     }
 
-    Matrix operator*(const Matrix &m, const Matrix &b) const {
-        return m * b;
-    }
-
-    Matrix operator*(Matrix *b) const {
-        if (mCols != b->mRows)
+    Matrix operator*(const Matrix &b) {
+        if (mCols != b.mRows)
             throw std::overflow_error("Cannot add these matrices");
 
-        auto result = Matrix<T>(mRows, b->mCols);
+        auto result = Matrix<T>(mRows, b.mCols);
 
         for (size_t i = 0; i < result.mRows; i++) {
             for (size_t k = 0; k < mCols; k++) {
                 double tmp = operator()(i, k);
                 for (size_t j = 0; j < result.mCols; j++) {
-                    result(i, j) += tmp * b->operator()(k, j);
+                    result(i, j) += tmp * b.operator()(k, j);
                 }
             }
         }
 
         return result;
-    }
-
-    bool operator==(const Matrix &other) {
-        if (data.size() != other.mData.size() || mRows != other.mRows || mCols != other.mCols)
-            return false;
-
-        for (int k = 0; k < data.size(); k++) {
-            if (data[k] != other.mData[k])
-                return false;
-        }
-
-        return true;
     }
 
     void fill(T value) {
@@ -139,28 +119,29 @@ public:
 };
 
 int main() {
-    auto dat = new Matrix<float>(3);
+    auto dat = Matrix<float>(3);
 
     std::cout << "empty" << std::endl;
-    dat->print();
+    dat.print();
 
     std::cout << "filled" << std::endl;
-    dat = dat + 10;
-    dat->print();
+    dat.fill(10);
+    dat.print();
 
     std::cout << "mul" << std::endl;
-    auto second = new Matrix<float>(3);
-    second->operator()(1, 0) = 3;
-    (dat * second).print();
+    auto second = Matrix<float>(3);
+    second(1, 0) = 3;
+    dat = dat * second;
+    dat.print();
 
     std::cout << "transpose" << std::endl;
-    auto h = new Matrix<float>(3);
-    h->operator()(1, 0) = 3;
-    h->print();
+    auto h = Matrix<float>(3);
+    h(1, 0) = 3;
+    h.print();
 
     std::cout << std::endl;
 
-    auto trans = h->transpose();
+    auto trans = h.transpose();
     trans.print();
 
     return 0;
